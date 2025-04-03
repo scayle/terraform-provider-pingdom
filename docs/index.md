@@ -16,7 +16,7 @@ description: |-
 terraform {
   required_providers {
     pingdom = {
-      source = "hashicorp.com/scayle/pingdom"
+      source = "scayle/pingdom"
     }
   }
 }
