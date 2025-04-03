@@ -16,14 +16,14 @@ provider "pingdom" {
 }
 
 resource "pingdom_http_check" "this" {
-  name = "Terraform Provider Test"
-  host = "google.com"
-  frequency = "1m"
+  name        = "Terraform Provider Test"
+  host        = "google.com"
+  frequency   = "1m"
   contact_ids = [data.pingdom_contact.this.id]
-  tags = { generated-by = "terraform" }
-  regions = ["EU"]
+  tags        = { generated-by = "terraform" }
+  regions     = ["EU"]
 }
 
-data "pingdom_contact"  "this" {
+data "pingdom_contact" "this" {
   name = "Terraform Contact Test"
 }

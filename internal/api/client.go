@@ -13,8 +13,8 @@ import (
 type Client interface {
 	GetCheck(ctx context.Context, id string) (*api_types.Check, error)
 	CreateCheck(ctx context.Context, body CreateCheckRequest) (*int64, error)
-	UpdateCheck(ctx context.Context, checkId string, body CreateCheckRequest) error
-	DeleteCheck(ctx context.Context, checkId string) error
+	UpdateCheck(ctx context.Context, id string, body CreateCheckRequest) error
+	DeleteCheck(ctx context.Context, id string) error
 
 	GetContacts(ctx context.Context) (*api_types.Contacts, error)
 }
