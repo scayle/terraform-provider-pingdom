@@ -36,4 +36,8 @@ provider "pingdom" {
 
 ### Required
 
-- `api_token` (String, Sensitive)
+- `api_token` (String, Sensitive) API token used to authenticate against the Pingdom API.
+
+The API token needs to have Read/Write permissions.
+
+See the Pingdom API documentation for more information: https://docs.pingdom.com/api/#section/Authentication.,

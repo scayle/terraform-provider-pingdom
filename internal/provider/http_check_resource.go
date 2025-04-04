@@ -46,7 +46,6 @@ type HTTPCheckResourceModel struct {
 	Host types.String        `tfsdk:"host"`
 	Url  types.String        `tfsdk:"url"`
 	Auth *HTTPCheckAuthModel `tfsdk:"auth"`
-	//Headers types.Map           `tfsdk:"headers"`
 
 	Frequency  types.String `tfsdk:"frequency"`
 	Message    types.String `tfsdk:"message"`
@@ -85,57 +84,50 @@ func (r *HTTPCheckResource) Schema(ctx context.Context, req resource.SchemaReque
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:            true,
-				MarkdownDescription: "Example identifier",
+				MarkdownDescription: "The ID of the check in Pingdom.",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Example configurable attribute with default value",
+				MarkdownDescription: "The name of the check.",
 				Required:            true,
 			},
 			"paused": schema.BoolAttribute{
-				MarkdownDescription: "Example configurable attribute",
+				MarkdownDescription: "Whether the check is paused.",
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(false),
 			},
 
 			"host": schema.StringAttribute{
-				MarkdownDescription: "Example configurable attribute",
+				MarkdownDescription: "The host of the check.",
 				Required:            true,
 			},
 			"url": schema.StringAttribute{
-				MarkdownDescription: "Example configurable attribute",
+				MarkdownDescription: "A specific URL to check against.",
 				Optional:            true,
 				Computed:            true,
 				Default:             stringdefault.StaticString("/"),
 			},
 			"auth": schema.SingleNestedAttribute{
-				MarkdownDescription: "Example configurable attribute",
+				MarkdownDescription: "Authentication configuration in case the host is protected by basic auth.",
 				Optional:            true,
 				Attributes: map[string]schema.Attribute{
 					"username": schema.StringAttribute{
-						MarkdownDescription: "Example configurable attribute",
+						MarkdownDescription: "The username for basic auth.",
 						Required:            true,
 					},
 					"password": schema.StringAttribute{
-						MarkdownDescription: "Example configurable attribute",
+						MarkdownDescription: "The password for basic auth.",
 						Required:            true,
 						Sensitive:           true,
 					},
 				},
 			},
-			//"headers": schema.MapAttribute{
-			//	MarkdownDescription: "Example configurable attribute",
-			//	Optional:            true,
-			//	Computed:            true,
-			//	ElementType:         types.StringType,
-			//	Default:             mapdefault.StaticValue(types.MapValueMust(types.StringType, map[string]attr.Value{})),
-			//},
 
 			"frequency": schema.StringAttribute{
-				MarkdownDescription: "Example configurable attribute",
+				MarkdownDescription: "Define how frequent the check should run. Allowed values are: 1m, 5m, 15m, 30m and 60m.",
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.String{
@@ -144,56 +136,56 @@ func (r *HTTPCheckResource) Schema(ctx context.Context, req resource.SchemaReque
 				Default: stringdefault.StaticString("5m"),
 			},
 			"message": schema.StringAttribute{
-				MarkdownDescription: "Example configurable attribute",
+				MarkdownDescription: "A custom message for the check to be send in the notifications.",
 				Optional:            true,
 			},
 			"contact_ids": schema.SetAttribute{
-				MarkdownDescription: "Example configurable attribute",
+				MarkdownDescription: "A list of contact IDs that will be notified.",
 				ElementType:         types.StringType,
 				Optional:            true,
 				Computed:            true,
 				Default:             setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
 			},
 			"response_time_threshold": schema.Int64Attribute{
-				MarkdownDescription: "Example configurable attribute",
+				MarkdownDescription: "Triggers a downtime if the response time exceeds this threshold (in ms). The default value is 30s (30000ms).",
 				Optional:            true,
 				Computed:            true,
 				Default:             int64default.StaticInt64(30000),
 			},
 			"notify_when_down": schema.Int64Attribute{
-				MarkdownDescription: "Example configurable attribute",
+				MarkdownDescription: "Notify the contacts when the check is down for X times. The default value is 2.",
 				Optional:            true,
 				Computed:            true,
 				Default:             int64default.StaticInt64(2),
 			},
 			"notify_again_every": schema.Int64Attribute{
-				MarkdownDescription: "Example configurable attribute",
+				MarkdownDescription: "Notify the contacts again when the check continues to be down after X times. The default value is 0.",
 				Optional:            true,
 				Computed:            true,
 				Default:             int64default.StaticInt64(0),
 			},
 			"notify_when_back_up": schema.BoolAttribute{
-				MarkdownDescription: "Example configurable attribute",
+				MarkdownDescription: "Notify the contacts when the check is back-up.",
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(true),
 			},
 
 			"ssl_down_days_before": schema.Int64Attribute{
-				MarkdownDescription: "Example configurable attribute",
+				MarkdownDescription: "Trigger a downtime if the SSL certificate expires in the given days. The default value is 7 days.",
 				Optional:            true,
 				Computed:            true,
 				Default:             int64default.StaticInt64(7),
 			},
 			"verify_certificate": schema.BoolAttribute{
-				MarkdownDescription: "Example configurable attribute",
+				MarkdownDescription: "Trigger a downtime if the SSL certificate is invalid or unverifiable. The default value is true.",
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(true),
 			},
 
 			"regions": schema.SetAttribute{
-				MarkdownDescription: "Example configurable attribute",
+				MarkdownDescription: "A list of regions from which the check will be performed.",
 				ElementType:         types.StringType,
 				Optional:            true,
 				Computed:            true,
@@ -206,7 +198,7 @@ func (r *HTTPCheckResource) Schema(ctx context.Context, req resource.SchemaReque
 			},
 
 			"tags": schema.MapAttribute{
-				MarkdownDescription: "Example configurable attribute",
+				MarkdownDescription: "A list of tags for the check.",
 				ElementType:         types.StringType,
 				Optional:            true,
 				Computed:            true,
@@ -251,11 +243,6 @@ func transformPingdomCheckToModel(check api_types.Check) (HTTPCheckResourceModel
 		tags[s[0]] = types.StringValue(s[1])
 	}
 
-	//headers := map[string]attr.Value{}
-	//for key, value := range check.Type.HTTP.RequestHeaders {
-	//	headers[key] = types.StringValue(value)
-	//}
-
 	var auth *HTTPCheckAuthModel
 	if check.Type.HTTP.Username != "" && check.Type.HTTP.Password != "" {
 		auth = &HTTPCheckAuthModel{
@@ -283,11 +270,6 @@ func transformPingdomCheckToModel(check api_types.Check) (HTTPCheckResourceModel
 		return HTTPCheckResourceModel{}, diagnostics
 	}
 
-	//tfHeaders, diagnostics := types.MapValue(types.StringType, headers)
-	//if diagnostics.HasError() {
-	//	return HTTPCheckResourceModel{}, diagnostics
-	//}
-
 	tfRegions, diagnostics := types.SetValue(types.StringType, regions)
 	if diagnostics.HasError() {
 		return HTTPCheckResourceModel{}, diagnostics
@@ -306,7 +288,6 @@ func transformPingdomCheckToModel(check api_types.Check) (HTTPCheckResourceModel
 		Host: types.StringValue(check.Hostname),
 		Url:  types.StringValue(check.Type.HTTP.URL),
 		Auth: auth,
-		//Headers: tfHeaders,
 
 		Frequency:             types.StringValue(fmt.Sprintf("%dm", check.Resolution)),
 		Message:               message,

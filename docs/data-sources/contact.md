@@ -17,8 +17,8 @@ Contact data source
 
 ### Required
 
-- `name` (String) Example configurable attribute
+- `name` (String) The name of the contact
 
 ### Read-Only
 
-- `id` (String) Example identifier
+- `id` (String) The ID of the contact

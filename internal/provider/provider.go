@@ -46,6 +46,12 @@ func (p *pingdomProvider) Schema(_ context.Context, _ provider.SchemaRequest, re
 			"api_token": schema.StringAttribute{
 				Required:  true,
 				Sensitive: true,
+				MarkdownDescription: `API token used to authenticate against the Pingdom API.
+
+The API token needs to have Read/Write permissions.
+
+See the Pingdom API documentation for more information: https://docs.pingdom.com/api/#section/Authentication.,
+`,
 			},
 		},
 	}

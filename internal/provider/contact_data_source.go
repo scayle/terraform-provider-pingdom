@@ -37,12 +37,12 @@ func (d *ContactDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 
 		Attributes: map[string]schema.Attribute{
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Example configurable attribute",
+				MarkdownDescription: "The name of the contact",
 				Required:            true,
 			},
 			"id": schema.StringAttribute{
 				Computed:            true,
-				MarkdownDescription: "Example identifier",
+				MarkdownDescription: "The ID of the contact",
 			},
 		},
 	}

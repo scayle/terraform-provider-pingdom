@@ -17,34 +17,34 @@ CheckDetail resource
 
 ### Required
 
-- `host` (String) Example configurable attribute
-- `name` (String) Example configurable attribute with default value
+- `host` (String) The host of the check.
+- `name` (String) The name of the check.
 
 ### Optional
 
-- `auth` (Attributes) Example configurable attribute (see [below for nested schema](#nestedatt--auth))
-- `contact_ids` (Set of String) Example configurable attribute
-- `frequency` (String) Example configurable attribute
-- `message` (String) Example configurable attribute
-- `notify_again_every` (Number) Example configurable attribute
-- `notify_when_back_up` (Boolean) Example configurable attribute
-- `notify_when_down` (Number) Example configurable attribute
-- `paused` (Boolean) Example configurable attribute
-- `regions` (Set of String) Example configurable attribute
-- `response_time_threshold` (Number) Example configurable attribute
-- `ssl_down_days_before` (Number) Example configurable attribute
-- `tags` (Map of String) Example configurable attribute
-- `url` (String) Example configurable attribute
-- `verify_certificate` (Boolean) Example configurable attribute
+- `auth` (Attributes) Authentication configuration in case the host is protected by basic auth. (see [below for nested schema](#nestedatt--auth))
+- `contact_ids` (Set of String) A list of contact IDs that will be notified.
+- `frequency` (String) Define how frequent the check should run. Allowed values are: 1m, 5m, 15m, 30m and 60m.
+- `message` (String) A custom message for the check to be send in the notifications.
+- `notify_again_every` (Number) Notify the contacts again when the check continues to be down after X times. The default value is 0.
+- `notify_when_back_up` (Boolean) Notify the contacts when the check is back-up.
+- `notify_when_down` (Number) Notify the contacts when the check is down for X times. The default value is 2.
+- `paused` (Boolean) Whether the check is paused.
+- `regions` (Set of String) A list of regions from which the check will be performed.
+- `response_time_threshold` (Number) Triggers a downtime if the response time exceeds this threshold (in ms). The default value is 30s (30000ms).
+- `ssl_down_days_before` (Number) Trigger a downtime if the SSL certificate expires in the given days. The default value is 7 days.
+- `tags` (Map of String) A list of tags for the check.
+- `url` (String) A specific URL to check against.
+- `verify_certificate` (Boolean) Trigger a downtime if the SSL certificate is invalid or unverifiable. The default value is true.
 
 ### Read-Only
 
-- `id` (String) Example identifier
+- `id` (String) The ID of the check in Pingdom.
 
 <a id="nestedatt--auth"></a>
 ### Nested Schema for `auth`
 
 Required:
 
-- `password` (String, Sensitive) Example configurable attribute
-- `username` (String) Example configurable attribute
+- `password` (String, Sensitive) The password for basic auth.
+- `username` (String) The username for basic auth.
