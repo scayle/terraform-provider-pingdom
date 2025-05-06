@@ -2,8 +2,9 @@ package provider
 
 import (
 	"context"
+	"os"
+
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
-	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -58,30 +59,38 @@ See the Pingdom API documentation for more information: https://docs.pingdom.com
 }
 
 func (p *pingdomProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
+	// Check environment variables
+	apiToken := os.Getenv("PINGDOM_API_TOKEN")
+
 	var config pingdomProviderModel
-	diags := req.Config.Get(ctx, &config)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
-		return
+
+	// Read configuration data into model
+	resp.Diagnostics.Append(req.Config.Get(ctx, &config)...)
+
+	// Check configuration data, which should take precedence over
+	// environment variable data, if found.
+	if config.ApiToken.ValueString() != "" {
+		apiToken = config.ApiToken.ValueString()
 	}
 
 	// If any of the expected configurations are missing, return
 	// errors with provider-specific guidance.
-	if config.ApiToken.ValueString() == "" {
-		resp.Diagnostics.AddAttributeError(
-			path.Root("apiToken"),
-			"Missing Pingdom API Token",
-			"TODO",
+	if apiToken == "" {
+		resp.Diagnostics.AddError(
+			"Missing API Token Configuration",
+			"While configuring the provider, the API token was not found in "+
+				"the PINGDOM_API_TOKEN environment variable or provider "+
+				"configuration block api_token attribute.",
 		)
 	}
+
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	client := api.New(config.ApiToken.ValueString())
+	client := api.New(apiToken)
 	resp.DataSourceData = client
 	resp.ResourceData = client
-
 }
 
 func (p *pingdomProvider) DataSources(_ context.Context) []func() datasource.DataSource {
